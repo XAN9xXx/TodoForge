@@ -1,0 +1,25 @@
+# Local quick debug output
+/debug/
+
+# CMake build outputs
+/build/
+/build-*/
+build-gcc/
+build-gcc-debug/
+build-gcc-release/
+
+# Distribution output
+/dist/
+
+# Runtime data
+tasks.txt
+
+# Compiler artifacts
+*.exe
+*.obj
+*.o
+*.pdb
+*.ilk
+
+# Clangd / CMake compile database
+/compile_commands.json
