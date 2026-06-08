@@ -41,4 +41,5 @@ todo remove 1
 
 # Help and Version
 todo help      # or -h, --help
-todo version   # or -v, --version
+todo -v        # or --version
+```
