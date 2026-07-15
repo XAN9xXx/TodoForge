@@ -23,3 +23,7 @@ tasks.txt
 
 # Clangd / CMake compile database
 /compile_commands.json
+
+.claude/
+CLAUDE.md
+TodoForge.md
