@@ -1,20 +1,35 @@
+#include <charconv>
 #include <iostream>
 #include <string>
+#include <system_error>
 #include <unordered_map>
+#include <string_view>
+#include <optional>
 
 enum class Command
 {
     help, version, add, list, done, remove, unknown
 };
 
+struct Todo
+{
+    int id;
+    std::string title;
+    std::string created_date;
+    bool completed;
+};
+
 std::string help();
 std::string version();
 std::string unknown();
-std::string handle_add();
+std::string handle_add(std::string_view text);
 std::string handle_list();
-std::string handle_done();
-std::string handle_remove();
-std::string normalize_command(std::string& user_input_command);
+std::string handle_done(int id);
+std::string handle_remove(int id);
+std::string write_todos();
+std::string read_todos();
+[[nodiscard]]
+std::optional<int> parse_id(std::string_view str);
 Command parse_command(const std::string& str);
 
 int main(int argc, char* argv[])
@@ -24,42 +39,70 @@ int main(int argc, char* argv[])
         std::cout << help();
         return 0;
     }
-    std::string user_command_text = argv[1];
-    std::string sys_command_text = normalize_command(user_command_text);
-    switch (parse_command(sys_command_text)) 
+    switch (parse_command(argv[1])) 
     {
         case Command::help :
-            std::cout<<help();
+            std::cout << help();
             break;
         case Command::version :
-            std::cout<<version();
+            std::cout << version();
             break;
         case Command::add :
-            std::cout<<handle_add();
+            if (argc <= 2)
+            {
+                std::cerr << "Error: 'add' requires a title!\n";
+                return 1;
+            }
+            std::cout << handle_add(argv[2]);
             break;
         case Command::list :
-            std::cout<<handle_list();
+            std::cout << handle_list();
             break;
-        case Command::done :
-            std::cout<<handle_done();
+        case Command::done : {
+            if (argc <= 2)
+            {
+                std::cerr << "Error: 'done' requires a ID!\n";
+                return 1;
+            }
+            auto maybe_id = parse_id(argv[2]);
+            if (!maybe_id) {
+                std::cerr << "Error: invalid ID\n";
+                return 1;
+            }
+            std::cout << handle_done(*maybe_id);
             break;
-        case Command::remove :
-            std::cout<<handle_remove();
+            }
+        case Command::remove : {
+            if (argc <= 2)
+            {
+                std::cerr << "Error: 'remove' requires a ID!\n";
+                return 1;
+            }
+            auto maybe_id = parse_id(argv[2]);
+            if (!maybe_id) {
+                std::cerr << "Error: invalid ID\n";
+                return 1;
+            }
+            std::cout << handle_remove(*maybe_id);
             break;
+        }
         case Command::unknown :
-            std::cout<<unknown();
-            break;
+            std::cerr << unknown();
+            return 1;
     }
-
     return 0;
 }
 
 Command parse_command(const std::string& str)
 {
-    static const std::unordered_map<std::string, Command> map =
+    static const std::unordered_map <std::string, Command> map =
     {
         {"help", Command::help},
+        {"-h", Command::help},
+        {"--help", Command::help},
         {"version", Command::version},
+        {"-v", Command::version},
+        {"--version", Command::version},
         {"add", Command::add},
         {"list", Command::list},
         {"done", Command::done},
@@ -69,25 +112,17 @@ Command parse_command(const std::string& str)
     return (it != map.end()) ? it -> second : Command::unknown;
 }
 
-std::string normalize_command(std::string& user_input_command)
+std::optional<int> parse_id(std::string_view str)
 {
-    std::string output_command;
-    if(user_input_command == "-v" || user_input_command == "--version")
+    int id{};
+    const auto [ptr, ec] = std::from_chars(str.data(), str.data() + str.size(), id);
+    if (ec == std::errc{})
     {
-        output_command = "version";
-        return output_command;
+        if (id <= 0) return std::nullopt;
+        if (ptr != str.data() + str.size()) return std::nullopt;
+        return id;
     }
-    if(user_input_command == "-h"|| user_input_command == "--help" || user_input_command == "help")
-    {
-        output_command = "help";
-        return output_command;
-    }
-
-    if(user_input_command == "add") return user_input_command;
-    if(user_input_command == "list") return user_input_command;
-    if(user_input_command == "done") return user_input_command;
-    if(user_input_command == "remove") return user_input_command;
-    return "unknown";
+    return std::nullopt;
 }
 
 std::string help()
@@ -101,21 +136,21 @@ std::string version()
 }
 std::string unknown()
 {
-    return "Unknown command,please check help\n";
+    return "Unknown command, please check help\n";
 }
-std::string handle_add()
+std::string handle_add(std::string_view text)
 {
-    return "add command\n";
+   return "add command\n"; 
 }
 std::string handle_list()
 {
     return "list command\n";
 }
-std::string handle_done()
+std::string handle_done(int id)
 {
     return "done command\n";
 }
-std::string handle_remove()
+std::string handle_remove(int id)
 {
     return "remove command\n";
 }

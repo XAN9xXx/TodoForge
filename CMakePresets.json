@@ -1,0 +1,48 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "GCC Debug",
+      "description": "Debug build with GCC (MSYS2 UCRT64)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-gcc-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_STANDARD": "23",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF"
+      },
+      "environment": {
+        "PATH": "D:/Tools/msys2/ucrt64/bin;D:/Tools/msys2/usr/bin;$penv{PATH}"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "GCC Release",
+      "description": "Release build with GCC (MSYS2 UCRT64)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-gcc-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_STANDARD": "23",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CMAKE_EXE_LINKER_FLAGS": "-static-libstdc++ -static-libgcc -static"
+      },
+      "environment": {
+        "PATH": "D:/Tools/msys2/ucrt64/bin;D:/Tools/msys2/usr/bin;$penv{PATH}"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    }
+  ]
+}
