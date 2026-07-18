@@ -8,4 +8,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(todo
     src/main.cpp
+    src/todo.cpp
+    src/todo_collection.cpp
+    src/cli.cpp
+    src/app.cpp
 )
