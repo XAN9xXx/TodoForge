@@ -1,6 +1,8 @@
 #include "todo_collection.h"
+#include "domain_error.h"
 
 #include <algorithm>
+#include <expected>
 
 Todo& TodoCollection::add(std::string title)
 {
@@ -18,7 +20,7 @@ Todo* TodoCollection::find_by_id(int id)
     return nullptr;
 }
 
-bool TodoCollection::remove(int id)
+std::expected<void, DomainError> TodoCollection::remove(int id)
 {
     auto it = std::find_if(todos_.begin(), todos_.end(),
         [id](const Todo& todo) { return todo.get_id() == id; });
@@ -26,9 +28,9 @@ bool TodoCollection::remove(int id)
     if (it != todos_.end())
     {
         todos_.erase(it);
-        return true;
+        return {};
     }
-    return false;
+    return std::unexpected{DomainError::task_not_found};
 }
 
 const std::vector<Todo>& TodoCollection::all() const

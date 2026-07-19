@@ -1,5 +1,8 @@
 #pragma once
 
+#include "domain_error.h"
+
+#include <expected>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -20,7 +23,7 @@ class Todo
     Priority priority_ {Priority::medium};
 public:
     const std::string& get_title() const;
-    void set_title(std::string_view t);
+    std::expected<void, DomainError> set_title(std::string_view t);
     int get_id() const;
     bool is_completed() const;
     void set_completed(bool done);

@@ -1,5 +1,7 @@
 #include "todo.h"
+#include "domain_error.h"
 
+#include <expected>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -16,10 +18,11 @@ const std::string& Todo::get_title() const
     return title_;
 }
 
-void Todo::set_title(std::string_view t)
+std::expected<void, DomainError> Todo::set_title(std::string_view t)
 {
-    if (is_blank(t)) return;
+    if (is_blank(t)) return std::unexpected{DomainError::invalid_title};
     title_ = t;
+    return {};
 }
 
 int Todo::get_id() const

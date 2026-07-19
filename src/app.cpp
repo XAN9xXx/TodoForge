@@ -37,7 +37,7 @@ std::string handle_remove(TodoCollection& todos, int id)
 {
     if (auto* todo = todos.find_by_id(id))
     {
-        todos.remove(id);
+        auto result {todos.remove(id)};
         return "Removed task #" + std::to_string(id) + ".\n";
     }
     return "Error: task #" + std::to_string(id) + " not found.\n";

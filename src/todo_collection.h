@@ -1,8 +1,10 @@
 #pragma once
 
+#include <expected>
 #include <string>
 #include <vector>
 
+#include "domain_error.h"
 #include "todo.h"
 
 class TodoCollection
@@ -12,6 +14,6 @@ class TodoCollection
 public:
     Todo& add(std::string title);
     Todo* find_by_id(int id);
-    bool remove(int id);
+    std::expected<void, DomainError> remove(int id);
     const std::vector<Todo>& all() const;
 };
