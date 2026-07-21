@@ -16,4 +16,5 @@ public:
     Todo* find_by_id(int id);
     std::expected<void, DomainError> remove(int id);
     const std::vector<Todo>& all() const;
+    void insert(Todo todo);
 };

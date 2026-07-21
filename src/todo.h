@@ -28,7 +28,9 @@ public:
     bool is_completed() const;
     void set_completed(bool done);
     const std::vector<std::string>& get_tags() const;
+    void set_tags(std::vector<std::string> tags);
+    const std::chrono::system_clock::time_point& get_created_at() const;
     Priority get_priority() const;
     void set_priority(Priority p);
-    explicit Todo(int id, std::string title);
+    explicit Todo(int id, std::string title, std::chrono::system_clock::time_point created_at = std::chrono::system_clock::now());
 };

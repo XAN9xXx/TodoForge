@@ -1,12 +1,19 @@
 #include "app.h"
 #include "cli.h"
 #include "todo_collection.h"
+#include "storage.h"
 
 #include <iostream>
 
 int main(int argc, char* argv[])
 {
-    TodoCollection todos {};
+    auto load_result {load("data.todo")};
+    if (!load_result)
+    {
+        std::cerr << "Error: failed to load data!\n";
+        return 1;
+    }
+    TodoCollection todos {*load_result};
 
     if(argc <= 1)
     {
@@ -63,6 +70,12 @@ int main(int argc, char* argv[])
         case Command::unknown :
             std::cerr << unknown();
             return 1;
+    }
+    auto save_result {save(todos, "data.todo")};
+    if (!save_result)
+    {
+        std::cerr << "Error: failed to save data!\n";
+        return 1;
     }
     return 0;
 }

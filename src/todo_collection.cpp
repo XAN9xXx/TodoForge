@@ -37,3 +37,12 @@ const std::vector<Todo>& TodoCollection::all() const
 {
     return todos_;
 }
+
+void TodoCollection::insert(Todo todo)
+{
+    todos_.push_back(std::move(todo));
+    if (todos_.back().get_id() >= next_id_)
+    {
+        next_id_ = todos_.back().get_id() + 1;
+    }
+}

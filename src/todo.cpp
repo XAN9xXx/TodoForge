@@ -1,6 +1,8 @@
 #include "todo.h"
 #include "domain_error.h"
 
+#include <algorithm>
+#include <chrono>
 #include <expected>
 #include <string>
 #include <string_view>
@@ -45,6 +47,16 @@ const std::vector<std::string>& Todo::get_tags() const
     return tags_;
 }
 
+void Todo::set_tags(std::vector<std::string> tags)
+{
+    tags_ = std::move(tags);
+}
+
+const std::chrono::system_clock::time_point& Todo::get_created_at() const
+{
+    return created_at_;
+}
+
 Priority Todo::get_priority() const
 {
     return priority_;
@@ -55,4 +67,4 @@ void Todo::set_priority(Priority p)
     priority_ = p;
 }
 
-Todo::Todo(int id, std::string title): id_{id}, title_{std::move(title)} {}
+Todo::Todo(int id, std::string title, std::chrono::system_clock::time_point created_at): id_{id}, title_{std::move(title)}, created_at_{created_at} {}

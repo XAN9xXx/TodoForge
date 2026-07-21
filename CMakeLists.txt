@@ -12,4 +12,5 @@ add_executable(todo
     src/todo_collection.cpp
     src/cli.cpp
     src/app.cpp
+    src/storage.cpp
 )
